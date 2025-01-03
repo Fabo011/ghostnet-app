@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: ghostnet-container
+    environment:
+      POSTGRES_USER: ghostnet
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: ghostnet-database
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persist PostgreSQL data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: ghostnet-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@ghostnet.com
+      PGADMIN_DEFAULT_PASSWORD: test
+    ports:
+      - "8080:80"  # Access pgAdmin at http://localhost:8080
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin  # Persist pgAdmin data
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
