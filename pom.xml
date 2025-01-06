@@ -8,6 +8,9 @@
     <artifactId>ghostnet-app</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <!-- Set packaging to WAR -->
+    <packaging>war</packaging>
+
     <properties>
         <maven.compiler.source>22</maven.compiler.source>
         <maven.compiler.target>22</maven.compiler.target>
@@ -16,11 +19,7 @@
 
     <dependencies>
         <!-- JSF -->
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.faces</artifactId>
-            <version>4.1.2</version>
-        </dependency>
+
 
         <!-- CDI -->
         <dependency>
@@ -48,13 +47,6 @@
             <version>42.7.4</version>
         </dependency>
 
-        <!-- PrimeFaces (Optional for enhanced UI) -->
-        <dependency>
-            <groupId>org.primefaces</groupId>
-            <artifactId>primefaces</artifactId>
-            <version>15.0.0-RC1</version>
-        </dependency>
-
         <!-- .env to protect secrets -->
         <dependency>
             <groupId>io.github.cdimascio</groupId>
@@ -63,5 +55,41 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <!-- maven-compiler-plugin to support Java 22 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version> <!-- Version 3.10.1 or higher supports Java 22 -->
+                <configuration>
+                    <source>22</source>
+                    <target>22</target>
+                    <release>22</release> <!-- Ensures compatibility with Java 22 -->
+                </configuration>
+            </plugin>
 
+            <!-- Add maven-war-plugin to build a WAR file -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.4.0</version>
+                <configuration>
+                    <!-- Skip web.xml validation completely -->
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <webResources>
+                        <resource>
+                            <directory>src/main/webapp</directory>
+                            <includes>
+                                <include>**/*.xhtml</include>
+                                <include>WEB-INF/beans.xml</include>
+                            </includes>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
+
+

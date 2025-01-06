@@ -26,4 +26,51 @@ public class GhostNet {
     private AppUser recoveryAgent; // The person assigned to recover the ghost net
 
     // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public GhostNetStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(GhostNetStatus status) {
+        this.status = status;
+    }
+
+    public AppUser getReporter() {
+        return reporter;
+    }
+
+    public void setReporter(AppUser reporter) {
+        this.reporter = reporter;
+    }
+
+    public AppUser getRecoveryAgent() {
+        return recoveryAgent;
+    }
+
+    public void setRecoveryAgent(AppUser recoveryAgent) {
+        this.recoveryAgent = recoveryAgent;
+    }
 }
