@@ -1,10 +1,8 @@
 # GhostNet App Dev Readme
 
 ### Start Project with Docker Compose
-```
-mvn clean install
-```
-
+Make sure you have Docker installed.
+Start the project with just one command.
 ```
 docker-compose build --no-cache && docker-compose up -d
 ```
@@ -12,31 +10,15 @@ docker-compose build --no-cache && docker-compose up -d
 Open in Browser
 http://localhost:8070/ghostnet-app-1.0-SNAPSHOT/index.xhtml
 
+---
+
+
 ### Central Maven Repository
 https://central.sonatype.com/
 
 ---
 
-Check installation
-```bash
-mvn clean install
-```
-
-Run main
-```bash
-mvn exec:java -Dexec.mainClass="com.shea.shepherd.Main"
-```
-
----
-
-### Docker Compose
-Make sure you have docker installed.
-
-Start docker compose
-```bash
-docker-compose up -d
-```
-
+### Docker Things
 Check if the containers are running
 ```bash
 docker ps
