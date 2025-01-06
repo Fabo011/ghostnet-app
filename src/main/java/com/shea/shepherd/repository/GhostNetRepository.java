@@ -8,10 +8,10 @@ import java.util.List;
 
 public class GhostNetRepository {
 
-    //@PersistenceContext
+    @PersistenceContext
     private EntityManager entityManager;
 
-    //@Transactional
+    @Transactional
     public void save(GhostNet ghostNet) {
         entityManager.persist(ghostNet);
     }

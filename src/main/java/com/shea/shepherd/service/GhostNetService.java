@@ -6,10 +6,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.List;
 
-//@ApplicationScoped
+@ApplicationScoped
 public class GhostNetService {
 
-    //@Inject
+    @Inject
     private GhostNetRepository ghostNetRepository;
 
     public void saveGhostNet(GhostNet ghostNet) {

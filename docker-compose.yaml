@@ -37,6 +37,7 @@ services:
       - "8070:8080" # Map app's server port
     depends_on:
       - postgres
+      - pgadmin
     environment:
       DB_HOST: localhost
       DB_PORT: 5432
