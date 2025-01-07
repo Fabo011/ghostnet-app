@@ -3,7 +3,7 @@ package com.shea.shepherd.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "ghostNet")
+@Table(name = "ghostnet")
 public class GhostNet {
 
     @Id

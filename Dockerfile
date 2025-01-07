@@ -1,39 +1,31 @@
-# Use a multi-stage build to reduce the final image size
-FROM eclipse-temurin:22-jdk AS build-stage
+# Stage 1: Build the application
+FROM openjdk:17-jdk-slim as build
 
-# Install Maven and required utilities
-RUN apt-get update && apt-get install -y wget unzip maven && rm -rf /var/lib/apt/lists/*
+# Install Maven
+RUN apt-get update && apt-get install -y maven
 
-# Set the working directory for the build
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the Maven project files to the build stage
-COPY pom.xml .
-COPY src ./src
+# Copy your project files (including pom.xml) into the container
+COPY . /app
 
-# Run Maven to build the WAR file
+# Run Maven clean install to build the application
 RUN mvn clean install
 
-# Use a lightweight base image for the runtime
-FROM eclipse-temurin:22-jdk
+# Stage 2: Deploy the WAR file in Tomcat
+FROM tomcat:9-jdk11-openjdk
 
-# Install TomEE
-RUN wget https://downloads.apache.org/tomee/tomee-10.0.0/apache-tomee-10.0.0-webprofile.tar.gz && \
-    tar -xvzf apache-tomee-10.0.0-webprofile.tar.gz -C /opt/ && \
-    ls -l /opt/apache-tomee-webprofile-10.0.0/bin/ && \
-    rm apache-tomee-10.0.0-webprofile.tar.gz
+# Set environment variables
+ENV APP_HOME=/usr/local/tomcat/webapps
 
-# Make catalina.sh executable
-RUN chmod +x /opt/apache-tomee-webprofile-10.0.0/bin/catalina.sh
+# Copy the WAR file from the build step into Tomcat's webapps folder
+COPY --from=build /app/target/ghostnet-app-1.0-SNAPSHOT.war ${APP_HOME}/ROOT.war
 
-# Set the working directory to the TomEE webapps folder
-WORKDIR /opt/apache-tomee-webprofile-10.0.0/webapps/
-
-# Copy the WAR file from the build stage
-COPY --from=build-stage /app/target/ghostnet-app-1.0-SNAPSHOT.war .
-
-# Expose TomEE default port (8070)
+# Expose the port Tomcat runs on
 EXPOSE 8070
 
-# Start TomEE server
-CMD ["/bin/sh", "/opt/apache-tomee-webprofile-10.0.0/bin/catalina.sh", "run"]
+# Start Tomcat in the foreground
+CMD ["catalina.sh", "run"]
+
+

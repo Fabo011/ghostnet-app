@@ -1,8 +1,8 @@
 services:
   postgres:
     restart: always
-    image: postgres:latest
-    container_name: ghostnet-container
+    image: postgres:15
+    container_name: ghostnet-database-container
     environment:
       POSTGRES_USER: ghostnet
       POSTGRES_PASSWORD: test
@@ -11,6 +11,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data  # Persist PostgreSQL data
+      #- ./init.sql:/docker-entrypoint-initdb.d/init.sql # Create tables etc.
 
   pgadmin:
     restart: always
@@ -39,12 +40,12 @@ services:
       - postgres
       - pgadmin
     environment:
-      DB_HOST: localhost
+      DB_HOST: ghostnet-database-container
       DB_PORT: 5432
-      DB_NAME: postgres
+      DB_NAME: ghostnet-database
       DB_USER: ghostnet
       DB_PASSWORD: test
-      DB_URL: jdbc:postgresql://localhost:5432/postgres
+      DB_URL: jdbc:postgresql://ghostnet-database-container:5432/ghostnet-database
 
 volumes:
   postgres_data:
