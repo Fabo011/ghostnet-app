@@ -7,24 +7,8 @@
     <title>Login</title>
 </h:head>
 <h:body>
-    <h:form>
-        <!-- Username input field -->
-        <h:outputLabel for="username" value="Username:" />
-        <h:inputText id="username" value="#{loginBean.username}" required="true" />
+   Hello World
 
-        <!-- Password input field -->
-        <h:outputLabel for="password" value="Password:" />
-        <h:inputSecret id="password" value="#{loginBean.password}" required="true" />
-
-        <!-- Role selection dropdown -->
-        <h:outputLabel for="role" value="Select Role:" />
-        <h:selectOneMenu id="role" value="#{loginBean.role}" required="true">
-            <f:selectItem itemLabel="Retriever" itemValue="retriever" />
-            <f:selectItem itemLabel="Reporter" itemValue="reporter" />
-        </h:selectOneMenu>
-
-        <!-- Submit button -->
-        <h:commandButton value="Login" action="#{loginBean.login}" />
-    </h:form>
+    <h:outputText value="#{artikel.name}"></h:outputText>
 </h:body>
 </html>

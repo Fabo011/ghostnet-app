@@ -1,6 +1,6 @@
 # GhostNet App Dev Readme
 
-### Start Project with Docker Compose
+## Start Project with Docker Compose
 Make sure you have Docker installed.
 Start the project with just one command.
 ```
@@ -9,8 +9,8 @@ docker-compose build --no-cache && docker-compose up -d
 
 When the database is created, execute GRANT SELECT, UPDATE, DELETE ON TABLE "appUser" TO ghostnet; in pgAdmin query tool.
 
-Open in Browser
-http://localhost:8070/ghostnet-app-1.0-SNAPSHOT/index.xhtml
+Open the application in Browser
+http://localhost:8070/index.xhtml
 
 ---
 

@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM openjdk:17-jdk-slim as build
+FROM openjdk:11-jdk-slim as build
 
 # Install Maven
 RUN apt-get update && apt-get install -y maven
@@ -14,7 +14,7 @@ COPY . /app
 RUN mvn clean install
 
 # Stage 2: Deploy the WAR file in Tomcat
-FROM tomcat:9-jdk11-openjdk
+FROM tomcat:10-jdk11-openjdk
 
 # Set environment variables
 ENV APP_HOME=/usr/local/tomcat/webapps
