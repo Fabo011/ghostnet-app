@@ -4,15 +4,23 @@
 Make sure you have Docker installed.
 Start the project with just one command.
 ```
-docker-compose build --no-cache && docker-compose up -d
+docker-compose up --build -d
 ```
 
-When the database is created, execute GRANT SELECT, UPDATE, DELETE ON TABLE "appUser" TO ghostnet; in pgAdmin query tool.
+When the database is created, execute GRANT SELECT, UPDATE, DELETE ON TABLE "appuser" TO ghostnet; in pgAdmin query tool.
+
+Execute TestDatabaseConnection.java
 
 Open the application in Browser
 http://localhost:8070/index.xhtml
 
 ---
+
+## Remove All
+```
+docker-compose down -v
+docker system prune -a
+```
 
 
 ### Central Maven Repository

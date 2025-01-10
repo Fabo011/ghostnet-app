@@ -4,11 +4,36 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <h:head>
-    <title>Login</title>
+    <title>User Login/Registration</title>
 </h:head>
 <h:body>
-   Hello World
 
-    <h:outputText value="#{artikel.name}"></h:outputText>
+    <h:outputText value="At login we will register you if no account exists" />
+    <h:form>
+        <h:outputLabel for="username" value="Username" />
+        <h:inputText id="username" value="#{userLoginBean.username}" required="true" />
+
+        <h:outputLabel for="role" value="Role" />
+        <h:selectOneMenu id="role" value="#{userLoginBean.role}" required="true">
+            <f:selectItem itemValue="reporter" itemLabel="Reporter" />
+            <f:selectItem itemValue="retriever" itemLabel="Retriever" />
+        </h:selectOneMenu>
+
+        <h:outputLabel for="phoneNumber" value="Phone Number (Required for Retriever)" />
+        <!-- Render the phoneNumber field for both roles -->
+        <h:inputText id="phoneNumber" value="#{userLoginBean.phoneNumber}"
+                     required="#{userLoginBean.role == 'retriever'}"
+                     rendered="true" />
+
+        <h:outputLabel for="password" value="Password" />
+        <h:inputSecret id="password" value="#{userLoginBean.password}" required="true" />
+
+        <h:commandButton value="Login/Register" action="#{userLoginBean.login}" />
+    </h:form>
+
+
+    <!-- Display Messages -->
+    <h:messages />
+
 </h:body>
 </html>
