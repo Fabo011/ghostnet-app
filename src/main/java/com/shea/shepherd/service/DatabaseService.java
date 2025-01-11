@@ -5,6 +5,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.Query;
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +47,7 @@ public class DatabaseService {
             user.setName(username);
             user.setRole(role);
             user.setPhoneNumber(phoneNumber);
-            user.setPassword(password);
+            user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
             em.persist(user);
             em.getTransaction().commit();
             LOGGER.info("User created successfully.");

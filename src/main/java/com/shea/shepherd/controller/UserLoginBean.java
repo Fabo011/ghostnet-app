@@ -8,6 +8,7 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import org.mindrot.jbcrypt.BCrypt;
 
 @Named
 @RequestScoped
@@ -66,14 +67,14 @@ public class UserLoginBean {
             System.out.println("Invalid input-------------------------");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please provide a valid username, role, and password.", null));
             FacesContext.getCurrentInstance().validationFailed();
-            return null;  // Stay on the current page
+            return null;
         }
 
         // Check if the user already exists
         UserEntity user = databaseService.findUserByUsername(username);
 
         if (user != null) {
-          return returnPage();
+          return passwordCheck(user.getPassword());
         } else {
           return registerUser();
         }
@@ -83,7 +84,7 @@ public class UserLoginBean {
         if ("retriever".equals(role) && (phoneNumber == null || phoneNumber.isEmpty())) {
             System.out.println("Retriever phone number required check-------------------------");
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Phone number is required for retrievers.", null));
-            return null;  // Stay on the current page
+            return null;
         }
 
         databaseService.createUser(username, role, phoneNumber, password);
@@ -102,6 +103,17 @@ public class UserLoginBean {
             return "retriever.xhtml?faces-redirect=true";  // Redirect to retriever page
         }
         return "login.xhtml?faces-redirect=true";
+    }
+
+    public String passwordCheck(String hashedPassword) {
+        boolean isValidPassword = BCrypt.checkpw(password, hashedPassword);
+
+        if (!isValidPassword) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid password.", null));
+            return null;
+        }
+
+        return returnPage();
     }
 }
 
