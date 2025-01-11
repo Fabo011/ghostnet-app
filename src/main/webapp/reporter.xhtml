@@ -5,11 +5,94 @@
 
 <h:head>
     <title>Reporter Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .report-container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 0.7rem;
+            font-size: 1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .messages {
+            margin-top: 1rem;
+            color: red;
+        }
+    </style>
 </h:head>
+
 <f:metadata>
     <f:viewAction action="#{userLoginBean.checkLogin}" />
 </f:metadata>
 <h:body>
-    <h:outputText value="Welcome to the Reporter Dashboard" />
+    <div class="report-container">
+        <h1>Report a Ghost Net</h1>
+
+        <h:form>
+            <div class="form-group">
+                <h:outputLabel for="location" value="Location (GPS Coordinates)" />
+                <h:inputText id="location" value="#{reporterBean.location}" required="true" />
+            </div>
+
+            <div class="form-group">
+                <h:outputLabel for="size" value="Estimated Size" />
+                <h:inputText id="size" value="#{reporterBean.size}" required="true" />
+            </div>
+
+            <button type="submit">
+                <h:commandButton value="Report Ghost Net" action="#{reporterBean.reportGhostNet}" />
+            </button>
+        </h:form>
+
+        <div class="messages">
+            <h:messages layout="list" />
+        </div>
+    </div>
 </h:body>
 </html>
