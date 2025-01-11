@@ -1,5 +1,7 @@
 package com.shea.shepherd.service;
 
+import com.shea.shepherd.model.GhostNetEntity;
+import com.shea.shepherd.model.GhostNetStatus;
 import com.shea.shepherd.model.UserEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -54,6 +56,26 @@ public class DatabaseService {
         } catch (Exception e) {
             em.getTransaction().rollback();
             LOGGER.log(Level.SEVERE, "Error creating user: {0}", e.getMessage());
+        } finally {
+            em.close(); // Closing the EntityManager only after operation is done
+        }
+    }
+
+    public void saveGhostNetReport(String username, String location, String size) {
+        em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            GhostNetEntity ghostNet = new GhostNetEntity();
+            ghostNet.setReporterUsername(username);
+            ghostNet.setLocation(location);
+            ghostNet.setSize(size);
+            ghostNet.setStatus(GhostNetStatus.REPORTED);
+            em.persist(ghostNet);
+            em.getTransaction().commit();
+            LOGGER.info("Ghost net reported successfully.");
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            LOGGER.log(Level.SEVERE, "Error reporting ghost net: {0}", e.getMessage());
         } finally {
             em.close(); // Closing the EntityManager only after operation is done
         }
