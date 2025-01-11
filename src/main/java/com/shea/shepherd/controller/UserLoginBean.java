@@ -67,7 +67,13 @@ public class UserLoginBean {
         UserEntity user = databaseService.findUserByUsername(username);
 
         if (user != null) {
-          passwordCheck(user.getPassword());
+          boolean validPassword = passwordCheck(user.getPassword());
+
+             if (!validPassword) {
+               FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid password.", null));
+               return null;
+             }
+
           createSession(user.getName(), user.getRole());
           return returnPage();
         } else {
@@ -122,12 +128,8 @@ public class UserLoginBean {
         return "login.xhtml?faces-redirect=true";
     }
 
-    private void passwordCheck(String hashedPassword) {
-        boolean isValidPassword = BCrypt.checkpw(password, hashedPassword);
-
-        if (!isValidPassword) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid password.", null));
-        }
+    private boolean passwordCheck(String hashedPassword) {
+        return BCrypt.checkpw(password, hashedPassword);
     }
 
     private void basicValidation() {
