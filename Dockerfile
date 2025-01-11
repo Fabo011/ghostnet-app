@@ -29,3 +29,4 @@ EXPOSE 8070
 CMD ["catalina.sh", "run"]
 
 
+

@@ -1,21 +1,30 @@
-<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
-                                 http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
-             version="2.1">
-    <persistence-unit name="ghostnetPU">
-        <class>com.shea.shepherd.model.GhostNet</class>
-        <class>com.shea.shepherd.model.User</class>
-        <properties>
-            <property name="jakarta.persistence.jdbc.url" value="${DB_URL}" />
-            <property name="jakarta.persistence.jdbc.user" value="${DB_USER}" />
-            <property name="jakarta.persistence.jdbc.password" value="${DB_PASSWORD}" />
-            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver" />
-            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
-            <property name="hibernate.hbm2ddl.auto" value="update" />
-            <property name="hibernate.show_sql" value="true" />
-            <property name="hibernate.globally_quoted_identifiers" value="true" />
-        </properties>
-    </persistence-unit>
-</persistence>
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
 
+    <persistence-unit name="ghostnet">
+        <description>
+            Persistence unit for the Jakarta Persistence tutorial of the Hibernate Getting Started Guide
+        </description>
+
+        <class>org.hibernate.tutorial.em.Event</class>
+
+        <properties>
+            <!-- Database connection settings -->
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://ghostnetdatabasecontainer:5432/ghostnetdatabase" />
+            <property name="jakarta.persistence.jdbc.user" value="ghostnet" />
+            <property name="jakarta.persistence.jdbc.password" value="test" />
+
+            <!-- Automatically export the schema -->
+            <property name="jakarta.persistence.schema-generation.database.action" value="update" />
+
+            <!-- Echo all executed SQL to console -->
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="true" />
+            <property name="hibernate.highlight_sql" value="true" />
+        </properties>
+
+    </persistence-unit>
+
+</persistence>
