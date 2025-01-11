@@ -7,8 +7,6 @@ Start the project with just one command.
 docker-compose up --build -d
 ```
 
-When the database is created, execute GRANT SELECT, UPDATE, DELETE ON TABLE "appuser" TO ghostnet; in pgAdmin query tool.
-
 Execute TestDatabaseConnection.java
 
 Open the application in Browser
