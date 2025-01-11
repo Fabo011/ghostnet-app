@@ -5,35 +5,107 @@
 
 <h:head>
     <title>User Login/Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+        input, select {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 0.7rem;
+            font-size: 1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .messages {
+            margin-top: 1rem;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
 </h:head>
+
 <h:body>
+    <div class="login-container">
+        <h1>Login/Register</h1>
+        <p>At login, we will register you if no account exists.</p>
 
-    <h:outputText value="At login we will register you if no account exists" />
-    <h:form>
-        <h:outputLabel for="username" value="Username" />
-        <h:inputText id="username" value="#{userLoginBean.username}" required="true" />
+        <h:form>
+            <div class="form-group">
+                <h:outputLabel for="username" value="Username" />
+                <h:inputText id="username" value="#{userLoginBean.username}" required="true" />
+            </div>
 
-        <h:outputLabel for="role" value="Role" />
-        <h:selectOneMenu id="role" value="#{userLoginBean.role}" required="true">
-            <f:selectItem itemValue="reporter" itemLabel="Reporter" />
-            <f:selectItem itemValue="retriever" itemLabel="Retriever" />
-        </h:selectOneMenu>
+            <div class="form-group">
+                <h:outputLabel for="role" value="Role" />
+                <h:selectOneMenu id="role" value="#{userLoginBean.role}" required="true">
+                    <f:selectItem itemValue="reporter" itemLabel="Reporter" />
+                    <f:selectItem itemValue="retriever" itemLabel="Retriever" />
+                </h:selectOneMenu>
+            </div>
 
-        <h:outputLabel for="phoneNumber" value="Phone Number (Required for Retriever)" />
-        <!-- Render the phoneNumber field for both roles -->
-        <h:inputText id="phoneNumber" value="#{userLoginBean.phoneNumber}"
-                     required="#{userLoginBean.role == 'retriever'}"
-                     rendered="true" />
+            <div class="form-group">
+                <h:outputLabel for="phoneNumber" value="Phone Number (Required for Retriever)" />
+                <h:inputText id="phoneNumber" value="#{userLoginBean.phoneNumber}"
+                             required="#{userLoginBean.role == 'retriever'}" rendered="true" />
+            </div>
 
-        <h:outputLabel for="password" value="Password" />
-        <h:inputSecret id="password" value="#{userLoginBean.password}" required="true" />
+            <div class="form-group">
+                <h:outputLabel for="password" value="Password" />
+                <h:inputSecret id="password" value="#{userLoginBean.password}" required="true" />
+            </div>
 
-        <h:commandButton value="Login/Register" action="#{userLoginBean.login}" />
-    </h:form>
+            <button type="submit">
+                <h:commandButton value="Login/Register" action="#{userLoginBean.login}" styleClass="btn" />
+            </button>
+        </h:form>
 
-
-    <!-- Display Messages -->
-    <h:messages />
-
+        <div class="messages">
+            <h:messages />
+        </div>
+    </div>
 </h:body>
 </html>
