@@ -10,6 +10,34 @@
     <f:viewAction action="#{userLoginBean.checkLogin}" />
 </f:metadata>
 <h:body>
-    <h:outputText value="Welcome to the Retriever Dashboard" />
+    <h:form>
+        <h:dataTable value="#{retrieverBean.ghostNets}" var="net" border="1">
+            <h:column>
+                <f:facet name="header">Location</f:facet>
+                #{net.location}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Size</f:facet>
+                #{net.size}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Status</f:facet>
+                #{net.status}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Assigned Retriever</f:facet>
+                #{net.assignedUser != null ? net.assignedUser.username : 'None'}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Actions</f:facet>
+                <h:commandButton value="Register for Recovery"
+                                 action="#{retrieverBean.registerForRecovery(net.id)}"
+                                 rendered="#{net.status == 'REPORTED' and net.assignedUser == null}" />
+                <h:commandButton value="Mark as Recovered"
+                                 action="#{retrieverBean.markAsRecovered(net.id)}"
+                                 rendered="#{net.status == 'RECOVERY_PENDING' and net.assignedUser.username == retrieverBean.username}" />
+            </h:column>
+        </h:dataTable>
+    </h:form>
 </h:body>
 </html>
