@@ -8,7 +8,7 @@
             Persistence unit for the Jakarta Persistence tutorial of the Hibernate Getting Started Guide
         </description>
 
-        <class>org.hibernate.tutorial.em.Event</class>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
 
         <properties>
             <!-- Database connection settings -->

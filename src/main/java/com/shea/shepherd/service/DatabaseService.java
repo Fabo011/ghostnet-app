@@ -9,6 +9,7 @@ import jakarta.persistence.Persistence;
 import jakarta.persistence.Query;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,6 +81,105 @@ public class DatabaseService {
             em.close(); // Closing the EntityManager only after operation is done
         }
     }
+
+    public List<GhostNetEntity> getAllGhostNetsSortedByStatus() {
+        em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            Query query = em.createQuery(
+                    "SELECT g FROM GhostNetEntity g ORDER BY " +
+                            "CASE g.status " +
+                            "WHEN 'REPORTED' THEN 1 " +
+                            "WHEN 'RECOVERY_PENDING' THEN 2 " +
+                            "WHEN 'RECOVERED' THEN 3 " +
+                            "WHEN 'MISSING' THEN 4 END",
+                    GhostNetEntity.class
+            );
+            List<GhostNetEntity> ghostNets = query.getResultList();
+            em.getTransaction().commit();
+            LOGGER.info("Ghost nets fetched successfully: " + ghostNets.size() + " nets found.");
+            return ghostNets;
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Failed to fetch ghost nets: {0}", e.getMessage());
+            return null;
+        } finally {
+            em.close(); // Closing the EntityManager after the operation
+        }
+    }
+
+    public GhostNetEntity findGhostNetById(Long ghostNetId) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            GhostNetEntity ghostNet = em.find(GhostNetEntity.class, ghostNetId);
+            em.getTransaction().commit();
+            return ghostNet;
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "Failed to find GhostNet with ID: {0}", ghostNetId);
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
+    public void assignRetrieverToGhostNet(Long ghostNetId, String retrieverUsername) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            // Find the ghost net
+            GhostNetEntity ghostNet = em.find(GhostNetEntity.class, ghostNetId);
+            if (ghostNet == null) {
+                throw new Exception("GhostNet not found with ID: " + ghostNetId);
+            }
+
+            // Check if a retriever is already assigned
+            if (ghostNet.getAssignedUser() != null) {
+                throw new Exception("This GhostNet already has an assigned retriever.");
+            }
+
+            // Assign the retriever username and update the status
+            ghostNet.setAssignedUser(retrieverUsername);
+            ghostNet.setStatus(GhostNetStatus.RECOVERY_PENDING);
+            em.merge(ghostNet);
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.out.println("Error assigning retriever to GhostNet: " + e.getMessage());
+        } finally {
+            em.close();
+        }
+    }
+
+    public void updateGhostNetStatus(Long ghostNetId, GhostNetStatus newStatus) {
+        em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            // Find the GhostNetEntity by its ID
+            GhostNetEntity ghostNet = em.find(GhostNetEntity.class, ghostNetId);
+            if (ghostNet == null) {
+                throw new Exception("GhostNet not found.");
+            }
+
+            // Update the status of the GhostNet
+            ghostNet.setStatus(newStatus);
+
+            // Commit the transaction to save the changes
+            em.merge(ghostNet);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw new RuntimeException("Error updating GhostNet status: " + e.getMessage());
+        } finally {
+            em.close();
+        }
+    }
+
+
 
     // Close EntityManagerFactory only when the application shuts down
     public void closeEntityManagerFactory() {

@@ -17,9 +17,9 @@ public class GhostNetEntity {
     @Enumerated(EnumType.STRING)
     private GhostNetStatus status;   // Use Enum for status
 
-    @ManyToOne
-    @JoinColumn(name = "assigned_user_id")
-    private UserEntity assignedUser; // Assigned retriever
+
+    // Assigned retriever
+    private String assignedUsername;
 
 
     // Getters and Setters
@@ -55,12 +55,12 @@ public class GhostNetEntity {
         this.status = status;
     }
 
-    public UserEntity getAssignedUser() {
-        return assignedUser;
+    public String getAssignedUser() {
+        return assignedUsername;
     }
 
-    public void setAssignedUser(UserEntity assignedUser) {
-        this.assignedUser = assignedUser;
+    public void setAssignedUser(String assignedUsername) {
+        this.assignedUsername = assignedUsername;
     }
 
     public String getReporterUsername() {

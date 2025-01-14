@@ -17,9 +17,6 @@ public class UserEntity {
     private String role;
     private String password;  // Add password field
 
-    @OneToMany(mappedBy = "assignedUser")
-    private List<GhostNetEntity> assignedGhostNets = new ArrayList<>();
-
     // Getters and Setters
     public Long getId() {
         return id;
@@ -59,13 +56,5 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public List<GhostNetEntity> getAssignedGhostNets() {
-        return assignedGhostNets;
-    }
-
-    public void setAssignedGhostNets(List<GhostNetEntity> assignedGhostNets) {
-        this.assignedGhostNets = assignedGhostNets;
     }
 }

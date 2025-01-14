@@ -37,12 +37,9 @@ public class ReporterBean {
     }
 
     public String getUsername() {
-        System.out.println("Username is null");
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
-        String username = (String) session.getAttribute("username");
-        System.out.println("Username: " + username);
-        return username;
+        return (String) session.getAttribute("username");
     }
 
     public String reportGhostNet() {

@@ -75,7 +75,7 @@ public class UserLoginBean {
              }
 
           createSession(user.getName(), user.getRole());
-          return returnPage();
+          return returnPage(user.getRole());
         } else {
           return registerUser();
         }
@@ -116,10 +116,10 @@ public class UserLoginBean {
         databaseService.createUser(username, role, phoneNumber, password);
         createSession(username, role);
 
-        return returnPage();
+        return returnPage(role);
     }
 
-    private String returnPage() {
+    private String returnPage(String role) {
         if ("reporter".equals(role)) {
             return "reporter.xhtml?faces-redirect=true";  // Redirect to reporter page
         } else if ("retriever".equals(role)) {
