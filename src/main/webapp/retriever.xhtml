@@ -26,7 +26,7 @@
             </h:column>
             <h:column>
                 <f:facet name="header">Assigned Retriever</f:facet>
-                #{net.assignedUser != null ? net.assignedUser.username : 'None'}
+                #{net.assignedUser != null ? net.assignedUser : 'None'}
             </h:column>
             <h:column>
                 <f:facet name="header">Actions</f:facet>
@@ -35,9 +35,10 @@
                                  rendered="#{net.status == 'REPORTED' and net.assignedUser == null}" />
                 <h:commandButton value="Mark as Recovered"
                                  action="#{retrieverBean.markAsRecovered(net.id)}"
-                                 rendered="#{net.status == 'RECOVERY_PENDING' and net.assignedUser.username == retrieverBean.username}" />
+                                 rendered="#{net.status == 'RECOVERY_PENDING' and net.assignedUser == retrieverBean.username}" />
             </h:column>
         </h:dataTable>
     </h:form>
 </h:body>
 </html>
+

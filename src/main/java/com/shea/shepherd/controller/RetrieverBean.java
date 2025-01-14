@@ -21,8 +21,18 @@ public class RetrieverBean {
 
     @Inject
     private DatabaseService databaseService;
+    private String username = getUsernameFromSession();
 
     private List<GhostNetEntity> ghostNets;
+
+    // Getter and setter for username
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     @PostConstruct
     public void init() {
@@ -37,22 +47,14 @@ public class RetrieverBean {
             try {
                 System.out.println("ghostNetId: " + ghostNetId);
 
-                String username = getUsernameFromSession();
-                UserEntity retriever = new UserEntity();
-                retriever.setName(username);
+                //String username = getUsernameFromSession();
 
-                System.out.println("retriever: " + retriever);
+                System.out.println("retriever: " + username);
 
-                databaseService.assignRetrieverToGhostNet(ghostNetId, retriever);
+                databaseService.assignRetrieverToGhostNet(ghostNetId, username);
 
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "You have registered for recovery.", null));
-
-                /**
-                 *         gne1_0.id=?
-                 * 13-Jan-2025 19:59:35.502 INFO [http-nio-8080-exec-10] com.sun.faces.renderkit.RenderKitUtils.renderUnhandledMessages WARNING: FacesMessage(s) have been enqueued, but may not have been displayed.
-                 * sourceId=null[severity=(ERROR 2), summary=(Failed to register for recovery. Please try again.), detail=(Failed to register for recovery. Please try again.)]
-                 * */
 
                 // Refresh the list
                 ghostNets = databaseService.getAllGhostNetsSortedByStatus();

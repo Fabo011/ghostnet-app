@@ -122,7 +122,7 @@ public class DatabaseService {
         }
     }
 
-    public void assignRetrieverToGhostNet(Long ghostNetId, UserEntity retriever) throws Exception {
+    public void assignRetrieverToGhostNet(Long ghostNetId, String retrieverUsername) {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
@@ -138,15 +138,15 @@ public class DatabaseService {
                 throw new Exception("This GhostNet already has an assigned retriever.");
             }
 
-            // Assign the retriever and update the status
-            ghostNet.setAssignedUser(retriever);
+            // Assign the retriever username and update the status
+            ghostNet.setAssignedUser(retrieverUsername);
             ghostNet.setStatus(GhostNetStatus.RECOVERY_PENDING);
             em.merge(ghostNet);
 
             em.getTransaction().commit();
         } catch (Exception e) {
             em.getTransaction().rollback();
-            throw e; // Rethrow to handle in calling method
+            System.out.println("Error assigning retriever to GhostNet: " + e.getMessage());
         } finally {
             em.close();
         }
