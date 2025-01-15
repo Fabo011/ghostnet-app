@@ -45,12 +45,6 @@ public class RetrieverBean {
 
     public void registerForRecovery(Long ghostNetId) {
             try {
-                System.out.println("ghostNetId: " + ghostNetId);
-
-                //String username = getUsernameFromSession();
-
-                System.out.println("retriever: " + username);
-
                 databaseService.assignRetrieverToGhostNet(ghostNetId, username);
 
                 FacesContext.getCurrentInstance().addMessage(null,
@@ -77,6 +71,21 @@ public class RetrieverBean {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to mark as recovered. Please try again.", null));
             }
+    }
+
+    public void markAsMissing(Long ghostNetId) {
+        try {
+            databaseService.updateGhostNetStatus(ghostNetId, GhostNetStatus.MISSING);
+
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Ghost net marked as missing.", null));
+
+            // Refresh the list
+            ghostNets = databaseService.getAllGhostNetsSortedByStatus();
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to mark as missing. Please try again.", null));
+        }
     }
 
     private String getUsernameFromSession() {

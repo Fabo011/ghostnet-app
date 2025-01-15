@@ -4,7 +4,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <h:head>
-    <title>Retriever Dashboard</title>
+    <title>GhostNet App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,7 +23,6 @@
             padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
-            margin-right: 5px;
         }
 
         h:commandButton:hover {
@@ -54,23 +53,18 @@
         .ghostnet-table tr:hover {
             background-color: #ddd;
         }
-
-        .messages {
-            margin-top: 20px;
-            color: red;
-        }
     </style>
 </h:head>
-<f:metadata>
-    <f:viewAction action="#{userLoginBean.checkLogin}" />
-</f:metadata>
 <h:body>
+    <!-- Navigation buttons -->
     <div style="margin-bottom: 20px;">
         <h:form>
-            <h:commandButton value="Go to Start Page" action="app.xhtml?faces-redirect=true" />
+            <h:commandButton value="Login to Report or Retrieve Ghostnets" action="login.xhtml?faces-redirect=true" />
             <h:commandButton value="Report Missing GhostNet" action="missing.xhtml?faces-redirect=true" style="margin-left: 10px;" />
         </h:form>
     </div>
+
+    <!-- Table to display ghost nets -->
     <h:form>
         <h:dataTable value="#{retrieverBean.ghostNets}" var="net" styleClass="ghostnet-table">
             <h:column>
@@ -89,21 +83,8 @@
                 <f:facet name="header">Assigned Retriever</f:facet>
                 #{net.assignedUser != null ? net.assignedUser : 'None'}
             </h:column>
-            <h:column>
-                <f:facet name="header">Actions</f:facet>
-                <h:commandButton value="Register for Recovery"
-                                 action="#{retrieverBean.registerForRecovery(net.id)}"
-                                 rendered="#{net.status == 'REPORTED' and net.assignedUser == null}" />
-                <h:commandButton value="Mark as Recovered"
-                                 action="#{retrieverBean.markAsRecovered(net.id)}"
-                                 rendered="#{net.status == 'RECOVERY_PENDING' and net.assignedUser == retrieverBean.username}" />
-            </h:column>
         </h:dataTable>
     </h:form>
-
-    <div class="messages">
-        <h:messages layout="list" />
-    </div>
 </h:body>
 </html>
 

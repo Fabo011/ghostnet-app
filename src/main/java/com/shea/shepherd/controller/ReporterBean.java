@@ -44,6 +44,7 @@ public class ReporterBean {
 
     public String reportGhostNet() {
         try {
+            // Check if ghostnet with location x already exists, if yes return with FacesContext message
 
             String username = getUsername();
             databaseService.saveGhostNetReport(username, location, size);
