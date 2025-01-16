@@ -2,7 +2,6 @@ package com.shea.shepherd.controller;
 
 import com.shea.shepherd.model.GhostNetEntity;
 import com.shea.shepherd.model.GhostNetStatus;
-import com.shea.shepherd.model.UserEntity;
 import com.shea.shepherd.service.DatabaseService;
 
 import jakarta.annotation.PostConstruct;
@@ -71,21 +70,6 @@ public class RetrieverBean {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to mark as recovered. Please try again.", null));
             }
-    }
-
-    public void markAsMissing(Long ghostNetId) {
-        try {
-            databaseService.updateGhostNetStatus(ghostNetId, GhostNetStatus.MISSING);
-
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Ghost net marked as missing.", null));
-
-            // Refresh the list
-            ghostNets = databaseService.getAllGhostNetsSortedByStatus();
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to mark as missing. Please try again.", null));
-        }
     }
 
     private String getUsernameFromSession() {

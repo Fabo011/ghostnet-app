@@ -86,13 +86,14 @@
                 <h:selectOneMenu id="role" value="#{userLoginBean.role}" required="true">
                     <f:selectItem itemValue="reporter" itemLabel="Reporter" />
                     <f:selectItem itemValue="retriever" itemLabel="Retriever" />
+                    <f:selectItem itemValue="missingreporter" itemLabel="Reporter for Missing Net" />
                 </h:selectOneMenu>
             </div>
 
             <div class="form-group">
-                <h:outputLabel for="phoneNumber" value="Phone Number (Required for Retriever)" />
+                <h:outputLabel for="phoneNumber" value="Phone Number (Required for Retriever and Reporter for Missing Net)" />
                 <h:inputText id="phoneNumber" value="#{userLoginBean.phoneNumber}"
-                             required="#{userLoginBean.role == 'retriever'}" rendered="true" />
+                             required="#{userLoginBean.role == 'retriever' or userLoginBean.role == 'missingreporter'}" rendered="true" />
             </div>
 
             <div class="form-group">

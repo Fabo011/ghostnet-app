@@ -14,6 +14,8 @@ public class GhostNetEntity {
     private String size;     // Estimated size
     private String reporterUsername;
 
+    private String missingReporterName;
+
     @Enumerated(EnumType.STRING)
     private GhostNetStatus status;   // Use Enum for status
 
@@ -69,6 +71,14 @@ public class GhostNetEntity {
 
     public void setReporterUsername(String reporterUsername) {
         this.reporterUsername = reporterUsername;
+    }
+
+    public void setMissingReporterName(String missingReporterName) {
+        this.missingReporterName = missingReporterName;
+    }
+
+    public String getMissingReporterName() {
+        return missingReporterName;
     }
 }
 

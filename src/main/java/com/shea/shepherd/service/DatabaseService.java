@@ -152,6 +152,36 @@ public class DatabaseService {
         }
     }
 
+    public void assignMissingReporterToGhostNet(Long ghostNetId, String missingReporterUsername) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            // Find the ghost net
+            GhostNetEntity ghostNet = em.find(GhostNetEntity.class, ghostNetId);
+            if (ghostNet == null) {
+                throw new Exception("GhostNet not found with ID: " + ghostNetId);
+            }
+
+            // Check if a retriever is already assigned
+            if (ghostNet.getMissingReporterName() != null) {
+                throw new Exception("This GhostNet was already reported as missing.");
+            }
+
+            // Assign the retriever username and update the status
+            ghostNet.setMissingReporterName(missingReporterUsername);
+            ghostNet.setStatus(GhostNetStatus.MISSING);
+            em.merge(ghostNet);
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.out.println("Error assigning retriever to GhostNet: " + e.getMessage());
+        } finally {
+            em.close();
+        }
+    }
+
     public void updateGhostNetStatus(Long ghostNetId, GhostNetStatus newStatus) {
         em = emf.createEntityManager();
         try {
@@ -180,7 +210,6 @@ public class DatabaseService {
     }
 
 
-
     // Close EntityManagerFactory only when the application shuts down
     public void closeEntityManagerFactory() {
         if (emf != null) {
@@ -189,6 +218,3 @@ public class DatabaseService {
         }
     }
 }
-
-
-

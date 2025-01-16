@@ -113,6 +113,11 @@ public class UserLoginBean {
             return null;
         }
 
+        if ("missingreporter".equals(role) && (phoneNumber == null || phoneNumber.isEmpty())) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Phone number is required for missing reporters.", null));
+            return null;
+        }
+
         databaseService.createUser(username, role, phoneNumber, password);
         createSession(username, role);
 
@@ -121,9 +126,11 @@ public class UserLoginBean {
 
     private String returnPage(String role) {
         if ("reporter".equals(role)) {
-            return "reporter.xhtml?faces-redirect=true";  // Redirect to reporter page
+            return "reporter.xhtml?faces-redirect=true";
         } else if ("retriever".equals(role)) {
-            return "retriever.xhtml?faces-redirect=true";  // Redirect to retriever page
+            return "retriever.xhtml?faces-redirect=true";
+        } else if ("missingreporter".equals(role)) {
+            return "missing.xhtml?faces-redirect=true";
         }
         return "login.xhtml?faces-redirect=true";
     }
