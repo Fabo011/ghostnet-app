@@ -1,0 +1,27 @@
+Enum "GhostNetStatus" {
+  "REPORTED"
+  "RECOVERY_PENDING"
+  "RECOVERED"
+  "MISSING"
+}
+
+Table "appuser" {
+  "id" bigint [not null, pk, increment]
+  "name" string [not null]
+  "phoneNumber" string
+  "role" string [not null]
+  "password" string [not null]
+}
+
+Table "ghostnet" {
+  "id" bigint [not null, pk, increment]
+  "location" string [not null]
+  "size" string [not null]
+  "reporterUsername" string [not null]
+  "missingReporterName" string
+  "status" GhostNetStatus [not null]
+  "assignedUsername" string
+}
+
+Ref: "appuser"."name" < "ghostnet"."reporterUsername" [label: "Reported by"]
+Ref: "appuser"."name" < "ghostnet"."assignedUsername" [label: "Assigned to"]
