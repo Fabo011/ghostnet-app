@@ -14,13 +14,13 @@ public class GhostNetEntity {
     private String size;     // Estimated size
     private String reporterUsername;
 
+    private String missingReporterName;
+
     @Enumerated(EnumType.STRING)
     private GhostNetStatus status;   // Use Enum for status
 
-
     // Assigned retriever
     private String assignedUsername;
-
 
     // Getters and Setters
     public Long getId() {
@@ -69,6 +69,14 @@ public class GhostNetEntity {
 
     public void setReporterUsername(String reporterUsername) {
         this.reporterUsername = reporterUsername;
+    }
+
+    public void setMissingReporterName(String missingReporterName) {
+        this.missingReporterName = missingReporterName;
+    }
+
+    public String getMissingReporterName() {
+        return missingReporterName;
     }
 }
 

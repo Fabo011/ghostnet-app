@@ -4,7 +4,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <h:head>
-    <title>Retriever Dashboard</title>
+    <title>Report Net as Missing</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,7 +23,6 @@
             padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
-            margin-right: 5px;
         }
 
         h:commandButton:hover {
@@ -54,11 +53,6 @@
         .ghostnet-table tr:hover {
             background-color: #ddd;
         }
-
-        .messages {
-            margin-top: 20px;
-            color: red;
-        }
     </style>
 </h:head>
 <f:metadata>
@@ -68,11 +62,10 @@
     <div style="margin-bottom: 20px;">
         <h:form>
             <h:commandButton value="Go to Login Page" action="login.xhtml?faces-redirect=true" />
-            <h:commandButton value="Report Missing GhostNet" action="missing.xhtml?faces-redirect=true" style="margin-left: 10px;" />
         </h:form>
     </div>
     <h:form>
-        <h:dataTable value="#{retrieverBean.ghostNets}" var="net" styleClass="ghostnet-table">
+        <h:dataTable value="#{missingBean.ghostNets}" var="net" styleClass="ghostnet-table">
             <h:column>
                 <f:facet name="header">Location</f:facet>
                 #{net.location}
@@ -91,12 +84,9 @@
             </h:column>
             <h:column>
                 <f:facet name="header">Actions</f:facet>
-                <h:commandButton value="Register for Recovery"
-                                 action="#{retrieverBean.registerForRecovery(net.id)}"
-                                 rendered="#{net.status == 'REPORTED' and net.assignedUser == null}" />
-                <h:commandButton value="Mark as Recovered"
-                                 action="#{retrieverBean.markAsRecovered(net.id)}"
-                                 rendered="#{net.status == 'RECOVERY_PENDING' and net.assignedUser == retrieverBean.username}" />
+                <h:commandButton value="Report net as missing"
+                                 action="#{missingBean.markAsMissing(net.id)}"
+                                 rendered="#{net.status != 'MISSING' and net.status != 'RECOVERED'}" />
             </h:column>
         </h:dataTable>
     </h:form>
@@ -105,4 +95,3 @@
     </div>
 </h:body>
 </html>
-

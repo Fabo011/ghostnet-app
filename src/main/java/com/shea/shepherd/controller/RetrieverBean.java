@@ -2,7 +2,6 @@ package com.shea.shepherd.controller;
 
 import com.shea.shepherd.model.GhostNetEntity;
 import com.shea.shepherd.model.GhostNetStatus;
-import com.shea.shepherd.model.UserEntity;
 import com.shea.shepherd.service.DatabaseService;
 
 import jakarta.annotation.PostConstruct;
@@ -14,9 +13,15 @@ import jakarta.inject.Named;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
-
-@RequestScoped
+/**
+ * This bean is request-scoped and interacts with the database service
+ * Users with role Retriever can add yourself to a ghostnet
+ * Users with role Retriever can mark a ghostnet as recovered
+ * Database entity: GhostNetEntity
+ * Using GhostNetStatus enum
+ */
 @Named
+@RequestScoped
 public class RetrieverBean {
 
     @Inject
@@ -25,7 +30,9 @@ public class RetrieverBean {
 
     private List<GhostNetEntity> ghostNets;
 
-    // Getter and setter for username
+    /**
+     * Getters and Setters
+     */
     public String getUsername() {
         return username;
     }
@@ -34,6 +41,9 @@ public class RetrieverBean {
         this.username = username;
     }
 
+    /**
+     * PostConstruct is called after ghostnet is marked as missing to update the table
+     */
     @PostConstruct
     public void init() {
         ghostNets = databaseService.getAllGhostNetsSortedByStatus();
@@ -43,20 +53,17 @@ public class RetrieverBean {
         return ghostNets;
     }
 
+    /**
+     * Function to register for recovery in happy case
+     * returns error message to user if something failed
+     */
     public void registerForRecovery(Long ghostNetId) {
             try {
-                System.out.println("ghostNetId: " + ghostNetId);
-
-                //String username = getUsernameFromSession();
-
-                System.out.println("retriever: " + username);
-
                 databaseService.assignRetrieverToGhostNet(ghostNetId, username);
 
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "You have registered for recovery.", null));
 
-                // Refresh the list
                 ghostNets = databaseService.getAllGhostNetsSortedByStatus();
             } catch (Exception e) {
                 FacesContext.getCurrentInstance().addMessage(null,
@@ -64,6 +71,10 @@ public class RetrieverBean {
             }
     }
 
+    /**
+     * Function to mark a ghostnet as recovered
+     * returns error message to user if something failed
+     */
     public void markAsRecovered(Long ghostNetId) {
             try {
                 databaseService.updateGhostNetStatus(ghostNetId, GhostNetStatus.RECOVERED);
@@ -79,6 +90,9 @@ public class RetrieverBean {
             }
     }
 
+    /**
+     * Function to get username from session
+     */
     private String getUsernameFromSession() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);

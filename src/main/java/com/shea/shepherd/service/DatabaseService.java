@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * DatabaseService is a class that provides methods to interact with the database.
+ * Its used in MissingBean, ReporterBean, RetrieverBean, UserLoginBean
+ */
 public class DatabaseService {
     private static final Logger LOGGER = Logger.getLogger(DatabaseService.class.getName());
     private EntityManagerFactory emf;
@@ -107,33 +111,16 @@ public class DatabaseService {
         }
     }
 
-    public GhostNetEntity findGhostNetById(Long ghostNetId) {
-        EntityManager em = emf.createEntityManager();
-        try {
-            em.getTransaction().begin();
-            GhostNetEntity ghostNet = em.find(GhostNetEntity.class, ghostNetId);
-            em.getTransaction().commit();
-            return ghostNet;
-        } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Failed to find GhostNet with ID: {0}", ghostNetId);
-            return null;
-        } finally {
-            em.close();
-        }
-    }
-
     public void assignRetrieverToGhostNet(Long ghostNetId, String retrieverUsername) {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
 
-            // Find the ghost net
             GhostNetEntity ghostNet = em.find(GhostNetEntity.class, ghostNetId);
             if (ghostNet == null) {
                 throw new Exception("GhostNet not found with ID: " + ghostNetId);
             }
 
-            // Check if a retriever is already assigned
             if (ghostNet.getAssignedUser() != null) {
                 throw new Exception("This GhostNet already has an assigned retriever.");
             }
@@ -152,21 +139,45 @@ public class DatabaseService {
         }
     }
 
+    public void assignMissingReporterToGhostNet(Long ghostNetId, String missingReporterUsername) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            GhostNetEntity ghostNet = em.find(GhostNetEntity.class, ghostNetId);
+            if (ghostNet == null) {
+                throw new Exception("GhostNet not found with ID: " + ghostNetId);
+            }
+
+            if (ghostNet.getMissingReporterName() != null) {
+                throw new Exception("This GhostNet was already reported as missing.");
+            }
+
+            // Assign the retriever username and update the status
+            ghostNet.setMissingReporterName(missingReporterUsername);
+            ghostNet.setStatus(GhostNetStatus.MISSING);
+            em.merge(ghostNet);
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            System.out.println("Error assigning retriever to GhostNet: " + e.getMessage());
+        } finally {
+            em.close();
+        }
+    }
+
     public void updateGhostNetStatus(Long ghostNetId, GhostNetStatus newStatus) {
         em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
 
-            // Find the GhostNetEntity by its ID
             GhostNetEntity ghostNet = em.find(GhostNetEntity.class, ghostNetId);
             if (ghostNet == null) {
                 throw new Exception("GhostNet not found.");
             }
 
-            // Update the status of the GhostNet
             ghostNet.setStatus(newStatus);
-
-            // Commit the transaction to save the changes
             em.merge(ghostNet);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -179,16 +190,24 @@ public class DatabaseService {
         }
     }
 
+    public GhostNetEntity findGhostNetByLocation(String location) {
+        em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
 
+            // Query to find a ghost net by location
+            Query query = em.createQuery("SELECT g FROM GhostNetEntity g WHERE g.location = :location", GhostNetEntity.class);
+            query.setParameter("location", location);
+            GhostNetEntity ghostNet = (GhostNetEntity) query.getSingleResult();
 
-    // Close EntityManagerFactory only when the application shuts down
-    public void closeEntityManagerFactory() {
-        if (emf != null) {
-            emf.close();  // Close EntityManagerFactory only at shutdown
-            LOGGER.info("EntityManagerFactory closed.");
+            em.getTransaction().commit();
+            LOGGER.info("Ghost net found at location: " + location);
+            return ghostNet;
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "No ghost net found at location: {0}", location);
+            return null;
+        } finally {
+            em.close(); // Ensure EntityManager is closed after operation
         }
     }
 }
-
-
-
