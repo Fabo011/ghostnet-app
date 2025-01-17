@@ -39,25 +39,17 @@ public class MissingBean {
         return ghostNets;
     }
 
-    public String markAsMissing(Long netId) {
+    public void markAsMissing(Long netId) {
         try {
-            System.out.println("Marked as missing netID: " + netId);
-            System.out.println("Name: " + username);
-
             databaseService.assignMissingReporterToGhostNet(netId, username);
 
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Ghost net marked as missing.", null));
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Ghost net marked as missing successfully.", null));
 
-            // Refresh the list
-            // TODO: Refresh of page with updated status was not working
             ghostNets = databaseService.getAllGhostNetsSortedByStatus();
-
-            return null;
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Failed to mark as missing. Please try again.", null));
-            return null;
         }
     }
 

@@ -14,8 +14,8 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 
-@RequestScoped
 @Named
+@RequestScoped
 public class RetrieverBean {
 
     @Inject
@@ -49,7 +49,6 @@ public class RetrieverBean {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "You have registered for recovery.", null));
 
-                // Refresh the list
                 ghostNets = databaseService.getAllGhostNetsSortedByStatus();
             } catch (Exception e) {
                 FacesContext.getCurrentInstance().addMessage(null,

@@ -19,10 +19,8 @@ public class GhostNetEntity {
     @Enumerated(EnumType.STRING)
     private GhostNetStatus status;   // Use Enum for status
 
-
     // Assigned retriever
     private String assignedUsername;
-
 
     // Getters and Setters
     public Long getId() {
