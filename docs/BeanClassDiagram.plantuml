@@ -1,0 +1,72 @@
+@startuml
+class UserLoginBean {
+    - static LOGGER : Logger
+    - databaseService : DatabaseService
+    - username : String
+    - role : String
+    - phoneNumber : String
+    - password : String
+    + getUsername() : String
+    + setUsername(username : String)
+    + getRole() : String
+    + setRole(role : String)
+    + getPhoneNumber() : String
+    + setPhoneNumber(phoneNumber : String)
+    + getPassword() : String
+    + setPassword(password : String)
+    + login() : String
+    + logout() : String
+    + checkLogin()
+    - registerUser() : String
+    - returnPage(role : String) : String
+    - passwordCheck(hashedPassword : String) : boolean
+    - basicValidation()
+    - createSession(username : String, role : String)
+}
+
+class ReporterBean {
+    - databaseService : DatabaseService
+    - location : String
+    - size : String
+    + getLocation() : String
+    + setLocation(location : String)
+    + getSize() : String
+    + setSize(size : String)
+    + getUsername() : String
+    + reportGhostNet() : String
+}
+
+class RetrieverBean {
+    - databaseService : DatabaseService
+    - username : String
+    - ghostNets : List<GhostNetEntity>
+    + getUsername() : String
+    + setUsername(username : String)
+    + getGhostNets() : List<GhostNetEntity>
+    + registerForRecovery(ghostNetId : Long)
+    + markAsRecovered(ghostNetId : Long)
+    - getUsernameFromSession() : String
+}
+
+class MissingBean {
+    - databaseService : DatabaseService
+    - username : String
+    - ghostNets : List<GhostNetEntity>
+    + getUsername() : String
+    + setUsername(username : String)
+    + getGhostNets() : List<GhostNetEntity>
+    + markAsMissing(netId : Long)
+    - getUsernameFromSession() : String
+}
+
+class DatabaseService
+class GhostNetEntity
+
+UserLoginBean --> DatabaseService : injects
+ReporterBean --> DatabaseService : injects
+RetrieverBean --> DatabaseService : injects
+RetrieverBean --> GhostNetEntity : interacts with
+MissingBean --> DatabaseService : injects
+MissingBean --> GhostNetEntity : interacts with
+
+@enduml
