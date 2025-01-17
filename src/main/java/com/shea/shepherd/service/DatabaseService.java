@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * DatabaseService is a class that provides methods to interact with the database.
+ * Its used in MissingBean, ReporterBean, RetrieverBean, UserLoginBean
+ */
 public class DatabaseService {
     private static final Logger LOGGER = Logger.getLogger(DatabaseService.class.getName());
     private EntityManagerFactory emf;
@@ -183,6 +187,27 @@ public class DatabaseService {
             throw new RuntimeException("Error updating GhostNet status: " + e.getMessage());
         } finally {
             em.close();
+        }
+    }
+
+    public GhostNetEntity findGhostNetByLocation(String location) {
+        em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+
+            // Query to find a ghost net by location
+            Query query = em.createQuery("SELECT g FROM GhostNetEntity g WHERE g.location = :location", GhostNetEntity.class);
+            query.setParameter("location", location);
+            GhostNetEntity ghostNet = (GhostNetEntity) query.getSingleResult();
+
+            em.getTransaction().commit();
+            LOGGER.info("Ghost net found at location: " + location);
+            return ghostNet;
+        } catch (Exception e) {
+            LOGGER.log(Level.WARNING, "No ghost net found at location: {0}", location);
+            return null;
+        } finally {
+            em.close(); // Ensure EntityManager is closed after operation
         }
     }
 }

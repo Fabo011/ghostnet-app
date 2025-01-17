@@ -14,6 +14,13 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+/**
+ * UserLoginBean is a bean class that handles user login and registration.
+ * It uses the DatabaseService to perform user operations.
+ * Database entity: UserEntity
+ * User Roles: reporter, retriever, missingreporter
+ */
 @Named
 @RequestScoped
 public class UserLoginBean {
@@ -27,7 +34,9 @@ public class UserLoginBean {
     private String phoneNumber;
     private String password;
 
-    // Getters and Setters
+    /**
+     * Getters and Setters
+     */
     public String getUsername() {
         return username;
     }
@@ -60,7 +69,13 @@ public class UserLoginBean {
         this.password = password;
     }
 
-    // Method to login or register the user with password check and session creation
+    /**
+     * Method to login a user
+     * Checks if user already registered, if not then registers the user
+     * If a user already registered then checks the password and login the user
+     * Password are hashed
+     * Creates a session for the user to check if the user is logged in or not in other pages which are protected
+     */
     public String login() {
         basicValidation();
 
@@ -81,7 +96,10 @@ public class UserLoginBean {
         }
     }
 
-    // Method to logout the user
+    /**
+     * Method to logout a user
+     * Invalidates the session and redirects to the login page
+     */
     public String logout() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
@@ -93,7 +111,10 @@ public class UserLoginBean {
         return "login.xhtml?faces-redirect=true"; // Redirect to the login page
     }
 
-    // Method to check if the user is logged in
+    /**
+     * Method to check if a user is logged in with session
+     * If user is not logged in then redirects to the login page
+     */
     public void checkLogin() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
@@ -107,6 +128,9 @@ public class UserLoginBean {
         }
     }
 
+    /**
+     * Method to register a user, is used in login method
+     */
     private String registerUser() {
         if ("retriever".equals(role) && (phoneNumber == null || phoneNumber.isEmpty())) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Phone number is required for retrievers.", null));
@@ -124,6 +148,10 @@ public class UserLoginBean {
         return returnPage(role);
     }
 
+    /**
+     * Method to return the page based on the user role
+     * Is used in login and register method
+     */
     private String returnPage(String role) {
         if ("reporter".equals(role)) {
             return "reporter.xhtml?faces-redirect=true";
@@ -135,10 +163,18 @@ public class UserLoginBean {
         return "login.xhtml?faces-redirect=true";
     }
 
+    /**
+     * Method to check if the password is correct
+     * Is used in login method
+     */
     private boolean passwordCheck(String hashedPassword) {
         return BCrypt.checkpw(password, hashedPassword);
     }
 
+    /**
+     * Method to do basic validation
+     * Is used in login and register method
+     */
     private void basicValidation() {
         if (username == null || username.isEmpty() || role == null || role.isEmpty() || password == null || password.isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please provide a valid username, role, and password.", null));
@@ -146,6 +182,10 @@ public class UserLoginBean {
         }
     }
 
+    /**
+     * Method to create a session for the user
+     * Is used in login and register method
+     */
     private void createSession(String username, String role) {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);

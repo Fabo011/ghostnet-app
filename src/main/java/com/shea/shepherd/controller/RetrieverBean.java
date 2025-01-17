@@ -13,7 +13,13 @@ import jakarta.inject.Named;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
-
+/**
+ * This bean is request-scoped and interacts with the database service
+ * Users with role Retriever can add yourself to a ghostnet
+ * Users with role Retriever can mark a ghostnet as recovered
+ * Database entity: GhostNetEntity
+ * Using GhostNetStatus enum
+ */
 @Named
 @RequestScoped
 public class RetrieverBean {
@@ -24,7 +30,9 @@ public class RetrieverBean {
 
     private List<GhostNetEntity> ghostNets;
 
-    // Getter and setter for username
+    /**
+     * Getters and Setters
+     */
     public String getUsername() {
         return username;
     }
@@ -33,6 +41,9 @@ public class RetrieverBean {
         this.username = username;
     }
 
+    /**
+     * PostConstruct is called after ghostnet is marked as missing to update the table
+     */
     @PostConstruct
     public void init() {
         ghostNets = databaseService.getAllGhostNetsSortedByStatus();
@@ -42,6 +53,10 @@ public class RetrieverBean {
         return ghostNets;
     }
 
+    /**
+     * Function to register for recovery in happy case
+     * returns error message to user if something failed
+     */
     public void registerForRecovery(Long ghostNetId) {
             try {
                 databaseService.assignRetrieverToGhostNet(ghostNetId, username);
@@ -56,6 +71,10 @@ public class RetrieverBean {
             }
     }
 
+    /**
+     * Function to mark a ghostnet as recovered
+     * returns error message to user if something failed
+     */
     public void markAsRecovered(Long ghostNetId) {
             try {
                 databaseService.updateGhostNetStatus(ghostNetId, GhostNetStatus.RECOVERED);
@@ -71,6 +90,9 @@ public class RetrieverBean {
             }
     }
 
+    /**
+     * Function to get username from session
+     */
     private String getUsernameFromSession() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);

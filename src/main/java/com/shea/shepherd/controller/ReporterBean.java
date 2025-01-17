@@ -9,6 +9,13 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpSession;
 
+
+/**
+ * ReporterBean is a bean class that handles the reporting of ghost nets.
+ * It uses the DatabaseService to save the report.
+ * Database entity: GhstNetEntity
+ * Using GhostNetStatus enum
+ */
 @Named
 @RequestScoped
 public class ReporterBean {
@@ -19,7 +26,9 @@ public class ReporterBean {
     private String location;  // GPS Coordinates
     private String size;      // Estimated size
 
-    // Getters and Setters
+    /**
+     * Getters and Setters
+     */
     public String getLocation() {
         return location;
     }
@@ -36,15 +45,29 @@ public class ReporterBean {
         this.size = size;
     }
 
+    /**
+     * Function to get username from session
+     */
     public String getUsername() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
         return (String) session.getAttribute("username");
     }
 
+    /**
+     * Function to report ghostnet in happy case
+     * if anything fails return FacesContext error message to user
+     * Database Entity: GhostNetEntity
+     * Database Enum: GhostNetStatus
+     */
     public String reportGhostNet() {
         try {
             // Check if ghostnet with location x already exists, if yes return with FacesContext message
+            if (databaseService.findGhostNetByLocation(location) != null) {
+                FacesContext.getCurrentInstance().addMessage(null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Ghost net already reported at this location.", null));
+                return null;
+            }
 
             String username = getUsername();
             databaseService.saveGhostNetReport(username, location, size);

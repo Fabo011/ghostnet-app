@@ -12,6 +12,12 @@ import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
+/**
+ * This bean is request-scoped and interacts with the database service
+ * to perform actions like marking a net as missing.
+ * Database entity: GhostNetEntity
+ * Using GhostNetStatus enum
+ */
 @Named
 @RequestScoped
 public class MissingBean {
@@ -21,7 +27,9 @@ public class MissingBean {
     private String username = getUsernameFromSession();
     private List<GhostNetEntity> ghostNets;
 
-    // Getters and setters
+    /**
+     * Getters and Setters
+     */
     public String getUsername() {
         return username;
     }
@@ -30,6 +38,9 @@ public class MissingBean {
         this.username = username;
     }
 
+    /**
+     * PostConstruct is called after ghostnet is marked as missing to update the table
+     */
     @PostConstruct
     public void init() {
         ghostNets = databaseService.getAllGhostNetsSortedByStatus();
@@ -39,6 +50,10 @@ public class MissingBean {
         return ghostNets;
     }
 
+    /**
+     * Function to mark ghostnet as missing in happy case
+     * returns error message to user if something failed
+     */
     public void markAsMissing(Long netId) {
         try {
             databaseService.assignMissingReporterToGhostNet(netId, username);
@@ -53,6 +68,9 @@ public class MissingBean {
         }
     }
 
+    /**
+     * Function to get username from session
+     */
     private String getUsernameFromSession() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(false);
